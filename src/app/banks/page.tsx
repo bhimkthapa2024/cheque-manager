@@ -8,7 +8,7 @@ import { storage } from "@/lib/storage";
 import { useToast } from "@/contexts/ToastContext";
 
 export default function BanksPage() {
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const { showToast } = useToast();
   const [banks, setBanks] = useState<Bank[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -45,7 +45,7 @@ export default function BanksPage() {
     const companyBanks = allBanks.filter(b => b.companyId === activeCompany.id);
     setBanks(companyBanks);
     setIsLoading(false);
-  }, [activeCompany]);
+  }, [activeCompany, syncCounter]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

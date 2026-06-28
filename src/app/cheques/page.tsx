@@ -21,7 +21,7 @@ const statusColors: Record<ChequeStatus, { bg: string, text: string, icon: React
 };
 
 function ChequesPageContent() {
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const { showToast } = useToast();
   const { confirm, prompt } = useConfirm();
   const searchParams = useSearchParams();
@@ -67,7 +67,7 @@ function ChequesPageContent() {
     setVendors(allVendors.filter(v => v.companyId === activeCompany.id));
 
     setIsLoading(false);
-  }, [activeCompany]);
+  }, [activeCompany, syncCounter]);
 
   // Handle query parameters and pre-fill form
   useEffect(() => {

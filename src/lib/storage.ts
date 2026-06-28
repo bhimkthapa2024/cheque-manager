@@ -1,9 +1,39 @@
 /**
- * Simple Local Storage utility for development
- * This allows the app to function without a live Firebase connection.
+ * Firestore Real-Time Syncing Storage Utility
+ * Integrates LocalStorage for instant UI changes and offline capability,
+ * with Firestore for real-time multi-device database syncing.
  */
 
+import { db } from "./firebase";
+import { collection, doc, setDoc, deleteDoc, onSnapshot } from "firebase/firestore";
+
 const isServer = typeof window === 'undefined';
+
+const getCollectionName = (key: string): string => {
+  // Map local storage key prefix to Firestore collection names
+  if (key === "audit_logs") return "audit_logs";
+  return key;
+};
+
+// Helper to convert Date objects and serialize data cleanly for Firestore
+const cleanForFirestore = (obj: any): any => {
+  if (obj === null || obj === undefined) return null;
+  if (obj instanceof Date) return obj.toISOString();
+  if (Array.isArray(obj)) return obj.map(cleanForFirestore);
+  if (typeof obj === 'object') {
+    const cleaned: any = {};
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        const val = obj[key];
+        if (val !== undefined) {
+          cleaned[key] = cleanForFirestore(val);
+        }
+      }
+    }
+    return cleaned;
+  }
+  return obj;
+};
 
 export const storage = {
   get: <T>(key: string): T[] => {
@@ -12,16 +42,45 @@ export const storage = {
     return data ? JSON.parse(data) : [];
   },
 
-  set: <T>(key: string, data: T[]): void => {
+  set: <T extends { id: string }>(key: string, data: T[]): void => {
     if (isServer) return;
+    
+    const oldData = storage.get<T>(key);
     localStorage.setItem(`chq_${key}`, JSON.stringify(data));
+
+    // Async Sync to Firestore
+    const colName = getCollectionName(key);
+    
+    // Identify and delete removed items
+    const newIds = new Set(data.map(item => item.id));
+    oldData.forEach(item => {
+      if (item.id && !newIds.has(item.id)) {
+        deleteDoc(doc(db, colName, item.id)).catch(err => 
+          console.error(`Firestore sync delete error for ${colName}/${item.id}:`, err)
+        );
+      }
+    });
+
+    // Save current items
+    data.forEach(item => {
+      if (item.id) {
+        const cleaned = cleanForFirestore(item);
+        setDoc(doc(db, colName, item.id), cleaned, { merge: true }).catch(err => 
+          console.error(`Firestore sync write error for ${colName}/${item.id}:`, err)
+        );
+      }
+    });
   },
 
   add: <T extends { id?: string }>(key: string, item: T): T => {
     const data = storage.get<T>(key);
     const newItem = { ...item, id: item.id || `local_${Date.now()}`, createdAt: new Date() };
-    data.push(newItem);
-    storage.set(key, data);
+    
+    // Cast newItem as T and push
+    data.push(newItem as unknown as T);
+    
+    // storage.set will handle local writing and Firestore sync
+    storage.set(key, data as any);
     return newItem;
   },
 
@@ -29,7 +88,8 @@ export const storage = {
     const data = storage.get<T>(key);
     const index = data.findIndex(i => i.id === id);
     if (index !== -1) {
-      data[index] = { ...data[index], ...updates, updatedAt: new Date() };
+      const updatedItem = { ...data[index], ...updates, updatedAt: new Date() };
+      data[index] = updatedItem;
       storage.set(key, data);
     }
   },
@@ -45,7 +105,7 @@ export const storage = {
     const newLog = {
       id: `log_${Date.now()}`,
       companyId,
-      userId: "Admin User", // For dev, we use a static user
+      userId: "Admin User",
       action,
       entityType,
       entityId,
@@ -55,4 +115,41 @@ export const storage = {
     logs.unshift(newLog); // Newest first
     storage.set("audit_logs", logs.slice(0, 100)); // Keep last 100
   }
+};
+
+const collectionsToSync = ["companies", "banks", "chequeBooks", "cheques", "vendors", "audit_logs"];
+
+// Start Firestore real-time listener sync
+export const startFirestoreSync = () => {
+  if (isServer) return;
+
+  collectionsToSync.forEach(key => {
+    const colRef = collection(db, getCollectionName(key));
+    
+    onSnapshot(colRef, (snapshot) => {
+      // If snapshot metadata indicates it's a local write, we can skip updating localStorage 
+      // because we already wrote it synchronously in storage methods.
+      // However, to keep it simple and ensure clean sync, we'll write the snapshot data.
+      const items: any[] = [];
+      snapshot.forEach(doc => {
+        const docData = doc.data();
+        items.push({
+          ...docData,
+          id: doc.id
+        });
+      });
+
+      // Avoid redundant triggers if local storage matches snapshot
+      const currentStored = localStorage.getItem(`chq_${key}`);
+      const newSerialized = JSON.stringify(items);
+      
+      if (currentStored !== newSerialized) {
+        localStorage.setItem(`chq_${key}`, newSerialized);
+        // Alert components that database updated
+        window.dispatchEvent(new CustomEvent("storage_sync", { detail: { key } }));
+      }
+    }, (error) => {
+      console.error(`Firestore real-time sync subscription error for collection '${key}':`, error);
+    });
+  });
 };

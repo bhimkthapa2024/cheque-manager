@@ -9,7 +9,7 @@ import { storage } from "@/lib/storage";
 import { useToast } from "@/contexts/ToastContext";
 
 export default function ChequeBooksPage() {
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const { showToast } = useToast();
   const [chequeBooks, setChequeBooks] = useState<ChequeBook[]>([]);
   const [banks, setBanks] = useState<Bank[]>([]);
@@ -34,7 +34,7 @@ export default function ChequeBooksPage() {
     setBanks(allBanks.filter(b => b.companyId === activeCompany.id));
 
     setIsLoading(false);
-  }, [activeCompany]);
+  }, [activeCompany, syncCounter]);
 
   const handleRegisterBook = async (e: React.FormEvent) => {
     e.preventDefault();

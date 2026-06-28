@@ -9,7 +9,7 @@ import { storage } from "@/lib/storage";
 import { useToast } from "@/contexts/ToastContext";
 
 export default function VendorsPage() {
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const { showToast } = useToast();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -42,7 +42,7 @@ export default function VendorsPage() {
     const companyVendors = allVendors.filter(v => v.companyId === activeCompany.id);
     setVendors(companyVendors);
     setIsLoading(false);
-  }, [activeCompany]);
+  }, [activeCompany, syncCounter]);
 
   const handleEditClick = (vendor: Vendor) => {
     setEditingVendor(vendor);

@@ -8,7 +8,7 @@ import type { Cheque, Bank, Vendor } from "@/types";
 import Link from "next/link";
 
 export default function Home() {
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const [data, setData] = useState({
     totalLiquidity: 0,
     outstandingLiabilities: 0,
@@ -131,7 +131,7 @@ export default function Home() {
     };
 
     setInsight(generateInsight());
-  }, [activeCompany]);
+  }, [activeCompany, syncCounter]);
 
   if (!activeCompany) {
     return (

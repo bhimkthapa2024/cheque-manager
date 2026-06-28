@@ -20,7 +20,7 @@ import {
 import { useToast } from "@/contexts/ToastContext";
 
 export default function ReportsPage() {
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const { showToast } = useToast();
 
   const [cheques, setCheques] = useState<Cheque[]>([]);
@@ -59,7 +59,7 @@ export default function ReportsPage() {
     setChequeBooks(allChequeBooks.filter(cb => cb.companyId === activeCompany.id));
     
     setIsLoading(false);
-  }, [activeCompany]);
+  }, [activeCompany, syncCounter]);
 
   // Total Liquidity
   const totalLiquidity = useMemo(() => {

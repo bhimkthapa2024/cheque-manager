@@ -19,7 +19,7 @@ import {
 import Link from "next/link";
 
 export default function VendorAnalysisHub() {
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [cheques, setCheques] = useState<Cheque[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +35,7 @@ export default function VendorAnalysisHub() {
     setVendors(allVendors);
     setCheques(allCheques);
     setIsLoading(false);
-  }, [activeCompany]);
+  }, [activeCompany, syncCounter]);
 
   const vendorStats = useMemo(() => {
     return vendors.map(v => {

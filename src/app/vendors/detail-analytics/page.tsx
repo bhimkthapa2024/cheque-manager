@@ -25,7 +25,7 @@ function VendorAnalyticsContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const router = useRouter();
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const [vendor, setVendor] = useState<Vendor | null>(null);
   const [cheques, setCheques] = useState<Cheque[]>([]);
   const [banks, setBanks] = useState<Bank[]>([]);
@@ -60,7 +60,7 @@ function VendorAnalyticsContent() {
     setBanks(allBanks);
 
     setIsLoading(false);
-  }, [activeCompany, id, router]);
+  }, [activeCompany, id, router, syncCounter]);
 
   const metrics = useMemo(() => {
     if (cheques.length === 0) return null;

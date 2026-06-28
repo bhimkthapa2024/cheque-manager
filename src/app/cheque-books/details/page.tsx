@@ -23,7 +23,7 @@ function ChequeBookDetailsContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const router = useRouter();
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const [book, setBook] = useState<ChequeBook | null>(null);
   const [cheques, setCheques] = useState<Cheque[]>([]);
   const [vendors, setVendors] = useState<Vendor[]>([]);
@@ -87,7 +87,7 @@ function ChequeBookDetailsContent() {
     }
     
     setIsLoading(false);
-  }, [id, activeCompany]);
+  }, [id, activeCompany, syncCounter]);
 
   const filteredCheques = cheques.filter(c => 
     c.chequeNumber.toLowerCase().includes(searchQuery.toLowerCase())

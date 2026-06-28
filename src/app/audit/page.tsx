@@ -23,7 +23,7 @@ const getColorForAction = (action: string) => {
 };
 
 export default function AuditPage() {
-  const { activeCompany } = useCompany();
+  const { activeCompany, syncCounter } = useCompany();
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -35,7 +35,7 @@ export default function AuditPage() {
     const allLogs = storage.get<AuditLog>("audit_logs");
     setLogs(allLogs.filter((l: AuditLog) => l.companyId === activeCompany.id));
     setIsLoading(false);
-  }, [activeCompany]);
+  }, [activeCompany, syncCounter]);
 
   if (!activeCompany) {
     return (
