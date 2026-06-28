@@ -462,11 +462,11 @@ export default function SettingsPage() {
                     <div key={u.uid} className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/20 transition-all">
                       <div className="flex items-center gap-6">
                         <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center font-black text-slate-500 text-lg border border-slate-200">
-                          {u.name.substring(0, 2).toUpperCase()}
+                          {(u.name || "Unknown").substring(0, 2).toUpperCase()}
                         </div>
                         <div>
                           <p className="font-black text-slate-900 tracking-tight flex items-center gap-2">
-                            {u.name}
+                            {u.name || "Unknown User"}
                             {u.uid === userProfile?.uid && (
                               <span className="text-[9px] font-black text-accent bg-accent/10 px-1.5 py-0.5 rounded">You</span>
                             )}
