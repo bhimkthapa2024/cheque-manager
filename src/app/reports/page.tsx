@@ -283,8 +283,8 @@ export default function ReportsPage() {
       {/* Header and Control Bar */}
       <div className="flex justify-between items-center print:hidden">
         <div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-            <TrendingUp className="w-8 h-8 text-accent shrink-0" />
+          <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+            <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-accent shrink-0" />
             Treasury Intelligence
           </h2>
           <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-1">
@@ -352,11 +352,11 @@ export default function ReportsPage() {
         <div className="flex gap-8">
           <div className="text-right border-r border-slate-200 pr-8">
             <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Available Cash</span>
-            <span className="text-xl font-black text-slate-900 tracking-tight">NPR {totalLiquidity.toLocaleString("en-NP", { minimumFractionDigits: 2 })}</span>
+            <span className="text-lg md:text-xl font-black text-slate-900 tracking-tight">NPR {totalLiquidity.toLocaleString("en-NP", { minimumFractionDigits: 2 })}</span>
           </div>
           <div className="text-right">
             <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Outstanding Liability</span>
-            <span className="text-xl font-black text-accent tracking-tight">
+            <span className="text-lg md:text-xl font-black text-accent tracking-tight">
               NPR {cheques.filter(c => c.status === "issued").reduce((sum, c) => sum + c.amount, 0).toLocaleString("en-NP", { minimumFractionDigits: 2 })}
             </span>
           </div>
@@ -364,10 +364,10 @@ export default function ReportsPage() {
       </div>
 
       {/* Grid Layout 1: Runway Plot & Doughnut Share */}
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         
         {/* Left Col: Cash Runway Projection Area Chart */}
-        <div className="col-span-2 glass-card p-8 flex flex-col justify-between min-h-[420px] print:col-span-3">
+        <div className="col-span-1 md:col-span-2 glass-card p-5 md:p-8 flex flex-col justify-between min-h-[420px] print:col-span-3">
           <div className="flex justify-between items-start mb-6">
             <div>
               <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
@@ -499,7 +499,7 @@ export default function ReportsPage() {
         </div>
 
         {/* Right Col: Bank Payout Share Doughnut */}
-        <div className="glass-card p-8 flex flex-col justify-between print:col-span-3">
+        <div className="glass-card p-5 md:p-8 flex flex-col justify-between print:col-span-3">
           <div>
             <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
               <Percent className="w-5 h-5 text-accent" />
@@ -579,10 +579,10 @@ export default function ReportsPage() {
       </div>
 
       {/* Grid Layout 2: Burn-Rate inventory & Vendor Risk Scoring */}
-      <div className="grid grid-cols-2 gap-8 print:grid-cols-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 print:grid-cols-1">
         
         {/* Left Side: Cheque Leaf Burn Rate Table */}
-        <div className="glass-card p-8 flex flex-col justify-between">
+        <div className="glass-card p-5 md:p-8 flex flex-col justify-between">
           <div>
             <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-indigo-600" />
@@ -649,7 +649,7 @@ export default function ReportsPage() {
         </div>
 
         {/* Right Side: Vendor Risk matrix */}
-        <div className="glass-card p-8 flex flex-col justify-between">
+        <div className="glass-card p-5 md:p-8 flex flex-col justify-between">
           <div>
             <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
               <AlertCircle className="w-5 h-5 text-red-500" />
@@ -705,7 +705,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Grid Layout 3: Forward Ledger Detail (Visual report feed) */}
-      <div className="glass-card p-8">
+      <div className="glass-card p-5 md:p-8">
         <div className="mb-6 flex justify-between items-center">
           <div>
             <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">

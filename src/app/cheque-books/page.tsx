@@ -83,12 +83,12 @@ export default function ChequeBooksPage() {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight flex items-center gap-3">
             Cheque Book Registry
           </h1>
-          <p className="text-slate-500 mt-2 text-lg">Register and track cheque serial ranges issued by banks.</p>
+          <p className="text-slate-500 mt-1 md:mt-2 text-[10px] md:text-lg font-bold uppercase tracking-widest md:normal-case md:tracking-normal md:font-normal">Register and track cheque serial ranges issued by banks.</p>
         </div>
         <button
           onClick={() => setIsAddModalOpen(true)}
@@ -122,7 +122,7 @@ export default function ChequeBooksPage() {
 
             return (
               <Link key={book.id} href={`/cheque-books/details?id=${book.id}`} className="block group">
-                <div className="glass-card p-8 group-hover:shadow-lg group-hover:-translate-y-1 transition-all">
+                <div className="glass-card p-5 md:p-8 group-hover:shadow-lg group-hover:-translate-y-1 transition-all">
                   <div className="flex justify-between items-start mb-6">
                     <div className="bg-accent/5 p-4 rounded-2xl text-accent border border-accent/10 group-hover:bg-accent/10 transition-all group-hover:scale-105">
                       <Book className="w-7 h-7" />
@@ -133,7 +133,7 @@ export default function ChequeBooksPage() {
                   </div>
                   
                   <div className="space-y-1 mb-6">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+                    <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
                       {book.prefix ? `${book.prefix} ` : ''}{book.startSerial} - {book.endSerial}
                     </h3>
                     <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em]">{bank?.bankName || 'Unknown Bank'}</p>
@@ -171,9 +171,9 @@ export default function ChequeBooksPage() {
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="glass-card w-full max-w-2xl overflow-hidden shadow-2xl border-white" onClick={e => e.stopPropagation()}>
-            <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <div className="px-4 md:px-8 py-4 md:py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
               <div>
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Register Cheque Book</h3>
+                <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Register Cheque Book</h3>
                 <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mt-1">Inventory Setup</p>
               </div>
               <button 
@@ -183,7 +183,7 @@ export default function ChequeBooksPage() {
                 <XCircle className="w-6 h-6" />
               </button>
             </div>
-            <form onSubmit={handleRegisterBook} className="p-8 space-y-6">
+            <form onSubmit={handleRegisterBook} className="p-4 md:p-8 space-y-4 md:space-y-6">
               <div>
                 <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">Select Bank</label>
                 <div className="relative">
@@ -204,7 +204,7 @@ export default function ChequeBooksPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 <div>
                   <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">Prefix</label>
                   <input
