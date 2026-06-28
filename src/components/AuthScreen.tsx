@@ -88,7 +88,7 @@ export function AuthScreen() {
         </div>
 
         {/* Card */}
-        <div className="w-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-2xl p-10 rounded-[3rem] text-white">
+        <div className="w-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-2xl p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] text-white">
           
           {/* Tabs */}
           {activeTab !== "forgot" && (

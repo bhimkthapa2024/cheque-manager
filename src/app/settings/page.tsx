@@ -315,10 +315,10 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-10 max-w-6xl mx-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">System Settings</h1>
-          <p className="text-slate-500 mt-2 text-lg">Manage multi-company profiles and bank configurations.</p>
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">System Settings</h1>
+          <p className="text-slate-500 mt-2 text-sm md:text-lg">Manage multi-company profiles and bank configurations.</p>
         </div>
         {isSuperAdmin && activeTab !== 'users' && (
           <button
@@ -335,11 +335,11 @@ export default function SettingsPage() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex gap-4 p-1.5 bg-slate-200/50 rounded-2xl w-fit border border-slate-200">
+      <div className="flex gap-2 p-1.5 bg-slate-200/50 rounded-2xl w-full md:w-fit border border-slate-200 overflow-x-auto snap-x hide-scrollbar">
         {isSuperAdmin && (
           <button
             onClick={() => setActiveTab('entities')}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+            className={`flex items-center gap-2 px-4 md:px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap snap-start shrink-0 ${
               activeTab === 'entities' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
@@ -349,7 +349,7 @@ export default function SettingsPage() {
         )}
         <button
           onClick={() => setActiveTab('banks')}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+          className={`flex items-center gap-2 px-4 md:px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap snap-start shrink-0 ${
             activeTab === 'banks' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
           }`}
         >
@@ -359,7 +359,7 @@ export default function SettingsPage() {
         {isSuperAdmin && (
           <button
             onClick={() => setActiveTab('users')}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+            className={`flex items-center gap-2 px-4 md:px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap snap-start shrink-0 ${
               activeTab === 'users' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
@@ -378,9 +378,9 @@ export default function SettingsPage() {
               </div>
               <div className="divide-y divide-slate-100">
                 {companies.map(c => (
-                  <div key={c.id} className="p-8 flex items-center justify-between group hover:bg-slate-50/20 transition-all">
-                    <div className="flex items-center gap-6">
-                      <div className={`h-12 w-12 rounded-xl flex items-center justify-center font-black text-lg ${
+                  <div key={c.id} className="p-4 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group hover:bg-slate-50/20 transition-all">
+                    <div className="flex items-center gap-4 md:gap-6">
+                      <div className={`h-10 w-10 md:h-12 md:w-12 rounded-xl flex items-center justify-center font-black text-lg shrink-0 ${
                         activeCompany?.id === c.id ? 'bg-accent text-white' : 'bg-slate-100 text-slate-400'
                       }`}>
                         {c.name.charAt(0)}
@@ -417,9 +417,9 @@ export default function SettingsPage() {
               ) : (
                 <div className="divide-y divide-slate-100">
                   {banks.map(b => (
-                    <div key={b.id} className="p-8 flex items-center justify-between group hover:bg-slate-50/20 transition-all">
-                      <div className="flex items-center gap-6">
-                        <div className="h-12 w-12 rounded-xl border border-slate-200 bg-white flex items-center justify-center overflow-hidden p-1.5 shadow-sm">
+                    <div key={b.id} className="p-4 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group hover:bg-slate-50/20 transition-all">
+                      <div className="flex items-center gap-4 md:gap-6">
+                        <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl border border-slate-200 bg-white flex items-center justify-center overflow-hidden p-1.5 shadow-sm shrink-0">
                           {b.logoUrl ? <img src={b.logoUrl} className="w-full h-full object-contain" /> : <Landmark className="w-5 h-5 text-slate-300" />}
                         </div>
                         <div>
@@ -459,9 +459,9 @@ export default function SettingsPage() {
               ) : (
                 <div className="divide-y divide-slate-100">
                   {usersList.map(u => (
-                    <div key={u.uid} className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/20 transition-all">
-                      <div className="flex items-center gap-6">
-                        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center font-black text-slate-500 text-lg border border-slate-200">
+                    <div key={u.uid} className="p-4 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/20 transition-all">
+                      <div className="flex items-center gap-4 md:gap-6">
+                        <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center font-black text-slate-500 text-lg border border-slate-200 shrink-0">
                           {(u.name || "Unknown").substring(0, 2).toUpperCase()}
                         </div>
                         <div>
@@ -600,7 +600,7 @@ export default function SettingsPage() {
                   <label className="text-xs font-black text-accent cursor-pointer">Choose File</label>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Bank Name</label>
                   <input required value={bankName} onChange={e => setBankName(e.target.value)} className="glass-input w-full" />
@@ -610,7 +610,7 @@ export default function SettingsPage() {
                   <input required value={accountNumber} onChange={e => setAccountNumber(e.target.value)} className="glass-input w-full font-mono" />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
                   <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Account Type</label>
                   <select value={accountType} onChange={e => setAccountType(e.target.value as any)} className="glass-input w-full">

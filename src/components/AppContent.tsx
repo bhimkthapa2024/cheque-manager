@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
@@ -31,19 +33,24 @@ export function AppContent({ children }: { children: React.ReactNode }) {
     );
   }
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   if (!user) {
     return <AuthScreen />;
   }
 
   return (
-    <>
-      <Sidebar />
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        <TopHeader />
-        <main className="flex-1 overflow-y-auto p-12 scroll-smooth">
+    <div className="flex h-screen w-full overflow-hidden">
+      <Sidebar 
+        isOpen={isMobileMenuOpen} 
+        onClose={() => setIsMobileMenuOpen(false)} 
+      />
+      <div className="flex-1 flex flex-col h-screen w-full overflow-hidden">
+        <TopHeader onMenuClick={() => setIsMobileMenuOpen(true)} />
+        <main className="flex-1 overflow-y-auto p-4 md:p-12 scroll-smooth">
           {children}
         </main>
       </div>
-    </>
+    </div>
   );
 }

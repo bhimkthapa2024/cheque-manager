@@ -18,8 +18,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Multi-Company Cheque Manager",
+  title: "ChequePro",
   description: "A centralized system for cheque lifecycle tracking and vendor management.",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

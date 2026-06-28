@@ -17,13 +17,32 @@ const navItems = [
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const { activeCompany, setActiveCompany, companies, isLoading } = useCompany();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-72 flex-col bg-white border-r border-slate-200 text-slate-900 shadow-sm relative z-20">
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 md:hidden" 
+          onClick={onClose}
+        />
+      )}
+
+      <div className={`
+        fixed md:relative top-0 left-0 h-screen w-72 flex-col bg-white border-r border-slate-200 text-slate-900 shadow-sm z-40
+        transition-transform duration-300 ease-in-out md:translate-x-0
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        flex
+      `}>
       <div className="flex h-24 items-center px-8">
         <h1 className="text-xl font-black tracking-tighter flex items-center gap-3 italic text-slate-900">
           <div className="bg-accent p-2 rounded-xl shadow-lg shadow-accent/20">
@@ -123,5 +142,6 @@ export function Sidebar() {
         )}
       </div>
     </div>
+    </>
   );
 }
