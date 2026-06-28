@@ -136,11 +136,11 @@ export default function Home() {
   if (!activeCompany) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 text-center animate-in fade-in zoom-in duration-700">
-        <div className="bg-white p-10 rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-100 max-w-lg">
+        <div className="bg-white p-6 md:p-10 rounded-[3rem] shadow-2xl shadow-slate-200 border border-slate-100 max-w-lg">
           <div className="h-20 w-20 bg-accent/5 rounded-3xl flex items-center justify-center text-accent mx-auto mb-8 animate-bounce">
             <Building2 className="w-10 h-10" />
           </div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-4">Select a Business Entity</h1>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-4">Select a Business Entity</h1>
           <p className="text-slate-500 font-medium text-lg leading-relaxed">
             Please choose a company from the sidebar to access its financial command center and real-time analytics.
           </p>
@@ -153,7 +153,7 @@ export default function Home() {
     <div className="space-y-10 max-w-7xl mx-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* KPI Header Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Link href="/banks" className="glass-card p-6 border-slate-200 relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
+        <Link href="/banks" className="glass-card p-4 md:p-6 border-slate-200 relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
           <div className="flex justify-between items-start mb-4">
             <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-100 text-emerald-600">
               <Wallet className="w-5 h-5" />
@@ -161,7 +161,7 @@ export default function Home() {
             <TrendingUp className="w-4 h-4 text-emerald-500" />
           </div>
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Liquidity</p>
-          <h3 className="text-2xl font-black tracking-tight mb-1 text-slate-900">
+          <h3 className="text-xl md:text-2xl font-black tracking-tight mb-1 text-slate-900">
             <span className="text-xs text-slate-300 mr-1.5 font-bold">NPR</span>
             {data.totalLiquidity.toLocaleString('en-NP', { minimumFractionDigits: 2 })}
           </h3>
@@ -170,7 +170,7 @@ export default function Home() {
           </p>
         </Link>
 
-        <Link href="/cheques?status=issued" className="glass-card p-6 border-slate-200 relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
+        <Link href="/cheques?status=issued" className="glass-card p-4 md:p-6 border-slate-200 relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
           <div className="flex justify-between items-start mb-4">
             <div className="p-3 bg-indigo-50 rounded-2xl border border-indigo-100 text-indigo-600">
               <TrendingUp className="w-5 h-5" />
@@ -181,14 +181,14 @@ export default function Home() {
             </div>
           </div>
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Outstanding Liabilities</p>
-          <h3 className="text-2xl font-black tracking-tight mb-1 text-slate-900">
+          <h3 className="text-xl md:text-2xl font-black tracking-tight mb-1 text-slate-900">
             <span className="text-xs text-slate-300 mr-1.5 font-bold">NPR</span>
             {data.outstandingLiabilities.toLocaleString('en-NP', { minimumFractionDigits: 2 })}
           </h3>
           <p className="text-[10px] text-slate-400 font-bold italic">Active Uncleared Cheques</p>
         </Link>
 
-        <Link href="/cheques" className="glass-card p-6 border-slate-200 relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
+        <Link href="/cheques" className="glass-card p-4 md:p-6 border-slate-200 relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
           <div className="flex justify-between items-start mb-4">
             <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-100 text-emerald-600">
               <CheckCircle2 className="w-5 h-5" />
@@ -196,7 +196,7 @@ export default function Home() {
             <ArrowUpRight className="w-4 h-4 text-emerald-500" />
           </div>
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Settlements</p>
-          <h3 className="text-2xl font-black tracking-tight mb-1 text-slate-900">
+          <h3 className="text-xl md:text-2xl font-black tracking-tight mb-1 text-slate-900">
             <span className="text-xs text-slate-300 mr-1.5 font-bold">NPR</span>
             {data.monthlyVolume.toLocaleString('en-NP', { minimumFractionDigits: 2 })}
           </h3>
@@ -205,7 +205,7 @@ export default function Home() {
           </p>
         </Link>
 
-        <Link href="/cheques?status=bounced" className="glass-card p-6 border-slate-200 relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
+        <Link href="/cheques?status=bounced" className="glass-card p-4 md:p-6 border-slate-200 relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
           <div className="flex justify-between items-start mb-4">
             <div className="p-3 bg-red-50 rounded-2xl border border-red-100 text-red-600">
               <AlertTriangle className="w-5 h-5" />
@@ -215,7 +215,7 @@ export default function Home() {
             </span>
           </div>
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Bounced Ratio</p>
-          <h3 className="text-2xl font-black tracking-tight mb-1 text-slate-900">
+          <h3 className="text-xl md:text-2xl font-black tracking-tight mb-1 text-slate-900">
             {data.bouncedRatio.toFixed(2)}%
           </h3>
           <p className="text-[10px] text-slate-400 font-bold italic">Risk Integrity Score</p>
@@ -225,10 +225,10 @@ export default function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Analytics Area */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="glass-card p-10 flex flex-col min-h-[400px]">
+          <div className="glass-card p-5 md:p-10 flex flex-col min-h-[400px]">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Recent Financial Activity</h3>
+                <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Recent Financial Activity</h3>
                 <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mt-1">Transaction Stream</p>
               </div>
               <Link href="/cheques" className="text-accent hover:text-accent/80 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border-b-2 border-accent/10 pb-1">
@@ -244,7 +244,7 @@ export default function Home() {
             ) : (
               <div className="space-y-4">
                 {data.recentCheques.map((chq) => (
-                  <div key={chq.id} className="bg-slate-50/50 border border-slate-100 p-5 rounded-3xl flex items-center justify-between hover:bg-slate-100 transition-colors group">
+                  <div key={chq.id} className="bg-slate-50/50 border border-slate-100 p-4 md:p-5 rounded-3xl flex items-center justify-between hover:bg-slate-100 transition-colors group">
                     <div className="flex items-center gap-5">
                       <div className="h-12 w-12 bg-white rounded-2xl flex items-center justify-center border border-slate-200 group-hover:scale-110 transition-transform shadow-sm text-accent">
                         <CreditCard className="w-6 h-6" />
@@ -269,7 +269,7 @@ export default function Home() {
 
         {/* Sidebar Analytics */}
         <div className="space-y-8">
-          <Link href="/vendors/analytics" className="glass-card p-8 border-slate-100 bg-white block transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer group">
+          <Link href="/vendors/analytics" className="glass-card p-5 md:p-8 border-slate-100 bg-white block transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer group">
             <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <PieChart className="w-4 h-4 text-accent" />
@@ -303,7 +303,7 @@ export default function Home() {
             </div>
             
             <div className="mt-10 pt-10 border-t border-slate-100">
-              <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
+              <div className="bg-slate-50 p-4 md:p-6 rounded-[2rem] border border-slate-100">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="p-3 bg-white rounded-2xl shadow-sm border border-slate-200">
                     <AlertTriangle className="w-6 h-6 text-amber-500" />
@@ -318,7 +318,7 @@ export default function Home() {
           </Link>
 
           {insight && (
-            <div className={`glass-card p-8 bg-gradient-to-br ${insight.color} border-none text-white relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02]`}>
+            <div className={`glass-card p-5 md:p-8 bg-gradient-to-br ${insight.color} border-none text-white relative overflow-hidden group cursor-pointer transition-all hover:scale-[1.02]`}>
               <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">

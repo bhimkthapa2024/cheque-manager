@@ -43,10 +43,10 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         flex
       `}>
-      <div className="flex h-24 items-center px-8">
-        <h1 className="text-xl font-black tracking-tighter flex items-center gap-3 italic text-slate-900">
-          <div className="bg-accent p-2 rounded-xl shadow-lg shadow-accent/20">
-            <CreditCard className="w-6 h-6 text-white" />
+      <div className="flex h-20 md:h-24 items-center px-6 md:px-8">
+        <h1 className="text-lg md:text-xl font-black tracking-tighter flex items-center gap-2 md:gap-3 italic text-slate-900">
+          <div className="bg-accent p-1.5 md:p-2 rounded-xl shadow-lg shadow-accent/20">
+            <CreditCard className="w-5 h-5 md:w-6 md:h-6 text-white" />
           </div>
           CHEQUE<span className="text-accent not-italic">PRO</span>
         </h1>

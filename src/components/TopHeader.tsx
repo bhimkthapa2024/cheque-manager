@@ -35,7 +35,7 @@ export function TopHeader({ onMenuClick }: TopHeaderProps) {
   };
 
   return (
-    <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-10 px-4 md:px-12 flex items-center justify-between shadow-sm">
+    <header className="h-16 md:h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-10 px-4 md:px-12 flex items-center justify-between shadow-sm">
       <div className="flex items-center gap-4 md:gap-8">
         <button 
           onClick={onMenuClick}
@@ -45,15 +45,15 @@ export function TopHeader({ onMenuClick }: TopHeaderProps) {
         </button>
         <div className="flex flex-col">
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Active Entity</span>
+            <span className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Active Entity</span>
             <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center text-white text-xs font-black shadow-lg shadow-accent/20">
+            <div className="h-7 w-7 md:h-8 md:w-8 rounded-lg bg-accent flex items-center justify-center text-white text-xs font-black shadow-lg shadow-accent/20 shrink-0">
               {activeCompany.name.charAt(0)}
             </div>
-            <h2 className="text-lg md:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-              <span className="truncate max-w-[120px] md:max-w-[300px]">{activeCompany.name}</span>
+            <h2 className="text-base md:text-xl font-black text-slate-900 tracking-tight flex items-center gap-1.5 md:gap-2">
+              <span className="truncate max-w-[100px] md:max-w-[300px]">{activeCompany.name}</span>
               <span className="text-slate-300 font-normal px-1 md:px-2">/</span>
               <span className="text-slate-400 font-bold text-sm tracking-normal hidden md:inline">{getPageTitle()}</span>
             </h2>
@@ -72,9 +72,9 @@ export function TopHeader({ onMenuClick }: TopHeaderProps) {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="p-3 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-2xl transition-all relative">
+          <button className="p-2 md:p-3 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-2xl transition-all relative">
             <Bell className="w-5 h-5" />
-            <span className="absolute top-3 right-3 w-2 h-2 bg-accent rounded-full border-2 border-white" />
+            <span className="absolute top-2.5 right-2.5 md:top-3 md:right-3 w-2 h-2 bg-accent rounded-full border-2 border-white" />
           </button>
           
           <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-slate-200">
@@ -82,16 +82,16 @@ export function TopHeader({ onMenuClick }: TopHeaderProps) {
               <span className="text-xs font-black text-slate-900">{userName}</span>
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{userRole}</span>
             </div>
-            <div className="h-10 w-10 rounded-2xl bg-slate-900 flex items-center justify-center text-white font-black text-xs border-2 border-white shadow-xl shadow-slate-900/10">
+            <div className="h-8 w-8 md:h-10 md:w-10 rounded-2xl bg-slate-900 flex items-center justify-center text-white font-black text-xs border-2 border-white shadow-xl shadow-slate-900/10 shrink-0">
               {getInitials(userName)}
             </div>
             
             <button
               onClick={() => signOutUser()}
-              className="p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all ml-1"
+              className="p-2 md:p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all ml-0 md:ml-1"
               title="Sign Out"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </div>
         </div>

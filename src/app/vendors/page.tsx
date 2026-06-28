@@ -156,8 +156,8 @@ export default function VendorsPage() {
     <div className="space-y-8 max-w-6xl mx-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Vendor Management</h1>
-          <p className="text-slate-500 mt-2 text-sm md:text-base">Manage vendor details and contact information for {activeCompany.name}</p>
+          <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight">Vendor Management</h1>
+          <p className="text-slate-500 mt-1 md:mt-2 text-[10px] md:text-base font-bold uppercase tracking-widest md:normal-case md:tracking-normal md:font-normal">Manage vendor details and contact information for {activeCompany.name}</p>
         </div>
         <div className="flex gap-4">
           <button
@@ -206,8 +206,8 @@ export default function VendorsPage() {
             <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 mb-6 text-slate-300">
               <Users className="w-12 h-12" />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 mb-2">No vendors found</h3>
-            <p className="text-slate-500 max-w-sm mx-auto mb-10 text-lg italic">
+            <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-2">No vendors found</h3>
+            <p className="text-slate-500 max-w-sm mx-auto mb-10 text-base md:text-lg italic">
               {searchQuery ? "No vendors match your search criteria." : "You haven't added any vendors for this company yet."}
             </p>
             {!searchQuery && (
@@ -295,9 +295,9 @@ export default function VendorsPage() {
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="glass-card w-full max-w-2xl overflow-hidden shadow-2xl border-white" onClick={e => e.stopPropagation()}>
-            <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <div className="px-4 md:px-8 py-4 md:py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
               <div>
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+                <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
                   {editingVendor ? "Update Vendor Profile" : "Register Vendor"}
                 </h3>
                 <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mt-1">Beneficiary Management</p>
@@ -312,7 +312,7 @@ export default function VendorsPage() {
                 <XCircle className="w-6 h-6" />
               </button>
             </div>
-            <form onSubmit={handleSaveVendor} className="p-8 space-y-6">
+            <form onSubmit={handleSaveVendor} className="p-4 md:p-8 space-y-4 md:space-y-6">
               <div>
                 <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">Company / Vendor Name</label>
                 <input
@@ -383,9 +383,9 @@ export default function VendorsPage() {
       {isBulkModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="glass-card w-full max-w-xl overflow-hidden shadow-2xl border-white" onClick={e => e.stopPropagation()}>
-            <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <div className="px-4 md:px-8 py-4 md:py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
               <div>
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Bulk Vendor Import</h3>
+                <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Bulk Vendor Import</h3>
                 <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mt-1">Batch Operations</p>
               </div>
               <button 
@@ -395,7 +395,7 @@ export default function VendorsPage() {
                 <XCircle className="w-6 h-6" />
               </button>
             </div>
-            <div className="p-8 space-y-8">
+            <div className="p-4 md:p-8 space-y-4 md:space-y-8">
               <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
                 <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">CSV Format Guide</h4>
                 <div className="bg-white p-4 rounded-xl border border-slate-200 font-mono text-[10px] text-slate-600">

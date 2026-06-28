@@ -302,8 +302,8 @@ function ChequesPageContent() {
     <div className="space-y-8 max-w-6xl mx-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Cheque Lifecycle</h1>
-          <p className="text-slate-500 mt-2 text-sm md:text-base">Track and manage issued cheques for {activeCompany.name}</p>
+          <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight">Cheque Lifecycle</h1>
+          <p className="text-slate-500 mt-1 md:mt-2 text-[10px] md:text-base font-bold uppercase tracking-widest md:normal-case md:tracking-normal md:font-normal">Track and manage issued cheques for {activeCompany.name}</p>
         </div>
         <button
           onClick={() => setIsAddModalOpen(true)}
@@ -354,8 +354,8 @@ function ChequesPageContent() {
             <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 mb-6 text-slate-300">
               <CreditCard className="w-12 h-12" />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 mb-2">No cheques found</h3>
-            <p className="text-slate-500 max-w-sm mx-auto mb-10 text-lg italic">
+            <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-2">No cheques found</h3>
+            <p className="text-slate-500 max-w-sm mx-auto mb-10 text-base md:text-lg italic">
               {searchQuery || statusFilter !== 'all' 
                 ? "No cheques match your filters." 
                 : "You haven't issued any cheques yet for this company."}
@@ -463,9 +463,9 @@ function ChequesPageContent() {
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="glass-card w-full max-w-4xl overflow-hidden shadow-2xl border-white" onClick={e => e.stopPropagation()}>
-            <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <div className="px-4 md:px-8 py-4 md:py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
               <div>
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Issue New Cheque</h3>
+                <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Issue New Cheque</h3>
                 <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mt-1">Lifecycle Transaction</p>
               </div>
               <button 
@@ -475,7 +475,7 @@ function ChequesPageContent() {
                 <XCircle className="w-6 h-6" />
               </button>
             </div>
-            <form onSubmit={handleAddCheque} className="p-8 space-y-8">
+            <form onSubmit={handleAddCheque} className="p-4 md:p-8 space-y-6 md:space-y-8">
               {banks.length === 0 || vendors.length === 0 ? (
                 <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center gap-3 text-amber-600">
                   <AlertCircle className="w-5 h-5 shrink-0" />
