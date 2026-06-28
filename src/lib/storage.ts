@@ -133,25 +133,34 @@ export const startFirestoreSync = () => {
     const colRef = collection(db, getCollectionName(key));
     
     onSnapshot(colRef, (snapshot) => {
-      // If snapshot metadata indicates it's a local write, we can skip updating localStorage 
-      // because we already wrote it synchronously in storage methods.
-      // However, to keep it simple and ensure clean sync, we'll write the snapshot data.
-      const items: any[] = [];
+      const firestoreItems: any[] = [];
       snapshot.forEach(doc => {
-        const docData = doc.data();
-        items.push({
-          ...docData,
-          id: doc.id
-        });
+        firestoreItems.push({ ...doc.data(), id: doc.id });
       });
 
-      // Avoid redundant triggers if local storage matches snapshot
+      // Get current local items to see if we have unsynced data
       const currentStored = localStorage.getItem(`chq_${key}`);
-      const newSerialized = JSON.stringify(items);
+      const localItems: any[] = currentStored ? JSON.parse(currentStored) : [];
       
-      if (currentStored !== newSerialized) {
+      const firestoreIds = new Set(firestoreItems.map(item => item.id));
+      let hasUnsyncedLocalData = false;
+
+      // Upload any local items that are missing from Firestore
+      localItems.forEach(localItem => {
+        if (!firestoreIds.has(localItem.id)) {
+          const cleaned = cleanForFirestore(localItem);
+          setDoc(doc(db, getCollectionName(key), localItem.id), cleaned, { merge: true }).catch(err => 
+            console.error(`Firestore auto-sync write error for ${key}/${localItem.id}:`, err)
+          );
+          firestoreItems.push(localItem); // Optimistically add to list so UI doesn't jump
+          hasUnsyncedLocalData = true;
+        }
+      });
+
+      const newSerialized = JSON.stringify(firestoreItems);
+      
+      if (currentStored !== newSerialized || hasUnsyncedLocalData) {
         localStorage.setItem(`chq_${key}`, newSerialized);
-        // Alert components that database updated
         window.dispatchEvent(new CustomEvent("storage_sync", { detail: { key } }));
       }
     }, (error) => {
