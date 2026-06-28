@@ -1,11 +1,13 @@
 "use client";
 
 import { useCompany } from "@/contexts/CompanyContext";
-import { Building2, ShieldCheck, Calendar, Bell } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Building2, ShieldCheck, Calendar, Bell, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function TopHeader() {
   const { activeCompany } = useCompany();
+  const { userProfile, signOutUser } = useAuth();
   const pathname = usePathname();
 
   // Convert pathname to a readable breadcrumb
@@ -15,6 +17,18 @@ export function TopHeader() {
   };
 
   if (!activeCompany) return null;
+
+  const userName = userProfile?.name || "User";
+  const userRole = userProfile?.role === "super_admin" ? "Super Admin" : "User";
+  
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "US";
+  };
 
   return (
     <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-10 px-12 flex items-center justify-between shadow-sm">
@@ -52,14 +66,23 @@ export function TopHeader() {
             <Bell className="w-5 h-5" />
             <span className="absolute top-3 right-3 w-2 h-2 bg-accent rounded-full border-2 border-white" />
           </button>
+          
           <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
             <div className="flex flex-col items-end">
-              <span className="text-xs font-black text-slate-900">Administrator</span>
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Master User</span>
+              <span className="text-xs font-black text-slate-900">{userName}</span>
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{userRole}</span>
             </div>
             <div className="h-10 w-10 rounded-2xl bg-slate-900 flex items-center justify-center text-white font-black text-xs border-2 border-white shadow-xl shadow-slate-900/10">
-              AD
+              {getInitials(userName)}
             </div>
+            
+            <button
+              onClick={() => signOutUser()}
+              className="p-3 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all ml-1"
+              title="Sign Out"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>

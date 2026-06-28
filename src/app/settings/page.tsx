@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useCompany } from "@/contexts/CompanyContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   Building2, 
   Plus, 
@@ -19,20 +20,25 @@ import {
   History,
   ShieldAlert,
   Activity,
-  DollarSign
+  DollarSign,
+  Users,
+  Loader2
 } from "lucide-react";
 import { useToast } from "@/contexts/ToastContext";
 import { useConfirm } from "@/contexts/ConfirmContext";
 import { storage } from "@/lib/storage";
 import type { Bank, Company } from "@/types";
 
-type TabType = 'entities' | 'banks';
+type TabType = 'entities' | 'banks' | 'users';
 
 export default function SettingsPage() {
   const { companies, addCompany, updateCompany, deleteCompany, activeCompany } = useCompany();
+  const { userProfile } = useAuth();
   const { showToast } = useToast();
   const { confirm } = useConfirm();
-  const [activeTab, setActiveTab] = useState<TabType>('entities');
+  
+  const isSuperAdmin = userProfile?.role === 'super_admin';
+  const [activeTab, setActiveTab] = useState<TabType>('banks');
   
   // Modal States
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
@@ -53,11 +59,77 @@ export default function SettingsPage() {
   const [routingNumber, setRoutingNumber] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
 
+  // User Management State
+  const [usersList, setUsersList] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+
+  useEffect(() => {
+    if (isSuperAdmin) {
+      setActiveTab('entities');
+    } else {
+      setActiveTab('banks');
+    }
+  }, [isSuperAdmin]);
+
   useEffect(() => {
     if (!activeCompany) return;
     const allBanks = storage.get<Bank>("banks").filter(b => b.companyId === activeCompany.id);
     setBanks(allBanks);
   }, [activeCompany, isBankModalOpen]);
+
+  // Load Users List
+  const fetchUsers = async () => {
+    if (!isSuperAdmin) return;
+    setLoadingUsers(true);
+    try {
+      const { collection, getDocs } = await import("firebase/firestore");
+      const { db } = await import("@/lib/firebase");
+      
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const list: any[] = [];
+      querySnapshot.forEach((doc) => {
+        list.push(doc.data());
+      });
+      setUsersList(list);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      showToast("Failed to load users list", "error");
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'users' && isSuperAdmin) {
+      fetchUsers();
+    }
+  }, [activeTab, isSuperAdmin]);
+
+  const handleUpdateRole = async (userId: string, newRole: 'super_admin' | 'user') => {
+    if (userId === userProfile?.uid) {
+      showToast("You cannot change your own role.", "error");
+      return;
+    }
+    const confirmed = await confirm(
+      `Are you sure you want to change this user's role to ${newRole === 'super_admin' ? 'Super Admin' : 'User'}?`,
+      { title: "Change User Role", confirmText: "Change", type: "warning" }
+    );
+    if (!confirmed) return;
+    
+    try {
+      const { doc, updateDoc } = await import("firebase/firestore");
+      const { db } = await import("@/lib/firebase");
+      
+      await updateDoc(doc(db, "users", userId), {
+        role: newRole
+      });
+      showToast("User role updated successfully!");
+      fetchUsers();
+    } catch (error) {
+      console.error("Error updating role:", error);
+      showToast("Failed to update user role", "error");
+    }
+  };
 
   // Company Handlers
   const resetCompanyForm = () => {
@@ -67,6 +139,7 @@ export default function SettingsPage() {
   };
 
   const handleEditCompany = (company: Company) => {
+    if (!isSuperAdmin) return;
     setEditingCompanyId(company.id);
     setCompanyName(company.name);
     setTaxId(company.taxId);
@@ -75,6 +148,7 @@ export default function SettingsPage() {
 
   const handleSaveCompany = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isSuperAdmin) return;
     if (editingCompanyId) {
       updateCompany(editingCompanyId, { name: companyName, taxId });
       showToast("Company profile updated successfully!");
@@ -87,6 +161,7 @@ export default function SettingsPage() {
   };
 
   const handleDeleteCompany = async (id: string) => {
+    if (!isSuperAdmin) return;
     if (companies.length <= 1) {
       showToast("Cannot delete the last remaining company.", "error");
       return;
@@ -113,6 +188,7 @@ export default function SettingsPage() {
   };
 
   const handleEditBank = (bank: Bank) => {
+    if (!isSuperAdmin) return;
     setEditingBank(bank);
     setBankName(bank.bankName);
     setAccountNumber(bank.accountNumber);
@@ -134,7 +210,7 @@ export default function SettingsPage() {
 
   const handleSaveBank = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!activeCompany) return;
+    if (!isSuperAdmin || !activeCompany) return;
 
     if (editingBank) {
       storage.update<Bank>("banks", editingBank.id, {
@@ -158,6 +234,7 @@ export default function SettingsPage() {
   };
 
   const handleDownloadBackup = () => {
+    if (!isSuperAdmin) return;
     try {
       const data: Record<string, any> = {};
       ["companies", "banks", "chequeBooks", "vendors", "cheques", "auditLogs"].forEach(key => {
@@ -177,7 +254,7 @@ export default function SettingsPage() {
   };
 
   const handleExportAudit = () => {
-    if (!activeCompany) return;
+    if (!isSuperAdmin || !activeCompany) return;
     try {
       const logs = storage.get("auditLogs").filter((l: any) => l.companyId === activeCompany.id);
       if (logs.length === 0) {
@@ -210,6 +287,7 @@ export default function SettingsPage() {
   };
 
   const handleWipeData = async () => {
+    if (!isSuperAdmin) return;
     const confirmed = await confirm(
       "CRITICAL ACTION: This will permanently delete ALL locally stored data (Companies, Banks, Cheques, Vendors). This action cannot be undone. Proceed?",
       { title: "Wipe System Memory", confirmText: "Proceed Wiping", type: "danger" }
@@ -221,6 +299,7 @@ export default function SettingsPage() {
   };
 
   const handleHealthCheck = () => {
+    if (!isSuperAdmin) return;
     showToast("Running system integrity scan...");
     setTimeout(() => {
       const cheques = storage.get("cheques");
@@ -241,29 +320,33 @@ export default function SettingsPage() {
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">System Settings</h1>
           <p className="text-slate-500 mt-2 text-lg">Manage multi-company profiles and bank configurations.</p>
         </div>
-        <button
-          onClick={() => {
-            if (activeTab === 'entities') { resetCompanyForm(); setIsCompanyModalOpen(true); }
-            else { resetBankForm(); setIsBankModalOpen(true); }
-          }}
-          className="btn-primary flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          {activeTab === 'entities' ? 'Add Company' : 'Add Bank'}
-        </button>
+        {isSuperAdmin && activeTab !== 'users' && (
+          <button
+            onClick={() => {
+              if (activeTab === 'entities') { resetCompanyForm(); setIsCompanyModalOpen(true); }
+              else if (activeTab === 'banks') { resetBankForm(); setIsBankModalOpen(true); }
+            }}
+            className="btn-primary flex items-center gap-2"
+          >
+            <Plus className="w-5 h-5" />
+            {activeTab === 'entities' ? 'Add Company' : 'Add Bank'}
+          </button>
+        )}
       </div>
 
       {/* Tab Navigation */}
       <div className="flex gap-4 p-1.5 bg-slate-200/50 rounded-2xl w-fit border border-slate-200">
-        <button
-          onClick={() => setActiveTab('entities')}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-            activeTab === 'entities' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-          }`}
-        >
-          <Building2 className="w-4 h-4" />
-          Business Entities
-        </button>
+        {isSuperAdmin && (
+          <button
+            onClick={() => setActiveTab('entities')}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+              activeTab === 'entities' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            <Building2 className="w-4 h-4" />
+            Business Entities
+          </button>
+        )}
         <button
           onClick={() => setActiveTab('banks')}
           className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
@@ -273,11 +356,22 @@ export default function SettingsPage() {
           <Landmark className="w-4 h-4" />
           Bank Registry
         </button>
+        {isSuperAdmin && (
+          <button
+            onClick={() => setActiveTab('users')}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+              activeTab === 'users' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            User Roles
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2">
-          {activeTab === 'entities' ? (
+          {activeTab === 'entities' && isSuperAdmin && (
             <div className="glass-card overflow-hidden">
               <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
                 <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Registered Entities</h3>
@@ -308,7 +402,9 @@ export default function SettingsPage() {
                 ))}
               </div>
             </div>
-          ) : (
+          )}
+
+          {activeTab === 'banks' && (
             <div className="glass-card overflow-hidden">
                <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
                 <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">Accounts for {activeCompany?.name}</h3>
@@ -331,9 +427,72 @@ export default function SettingsPage() {
                           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{b.accountNumber} • {b.accountType}</p>
                         </div>
                       </div>
-                      <button onClick={() => handleEditBank(b)} className="p-2.5 text-slate-400 hover:text-accent hover:bg-accent/5 rounded-xl transition-all">
-                        <Edit2 className="w-5 h-5" />
-                      </button>
+                      {isSuperAdmin && (
+                        <button onClick={() => handleEditBank(b)} className="p-2.5 text-slate-400 hover:text-accent hover:bg-accent/5 rounded-xl transition-all">
+                          <Edit2 className="w-5 h-5" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'users' && isSuperAdmin && (
+            <div className="glass-card overflow-hidden">
+              <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                <h3 className="font-black text-slate-900 uppercase tracking-widest text-xs">System User Directory</h3>
+                <span className="text-[10px] bg-slate-200 text-slate-600 font-black uppercase tracking-widest px-2 py-0.5 rounded-md">{usersList.length} Accounts</span>
+              </div>
+              
+              {loadingUsers ? (
+                <div className="p-20 text-center flex flex-col items-center justify-center gap-4 text-slate-400">
+                  <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                  <p className="text-xs font-black uppercase tracking-widest">Loading User List...</p>
+                </div>
+              ) : usersList.length === 0 ? (
+                <div className="p-20 text-center flex flex-col items-center opacity-50">
+                  <Users className="w-12 h-12 mb-4 text-slate-300" />
+                  <p className="text-sm font-black uppercase tracking-widest text-slate-400">No users found</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-100">
+                  {usersList.map(u => (
+                    <div key={u.uid} className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/20 transition-all">
+                      <div className="flex items-center gap-6">
+                        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center font-black text-slate-500 text-lg border border-slate-200">
+                          {u.name.substring(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="font-black text-slate-900 tracking-tight flex items-center gap-2">
+                            {u.name}
+                            {u.uid === userProfile?.uid && (
+                              <span className="text-[9px] font-black text-accent bg-accent/10 px-1.5 py-0.5 rounded">You</span>
+                            )}
+                          </p>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{u.email}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-4">
+                        <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg ${
+                          u.role === 'super_admin' ? 'bg-indigo-50 text-indigo-600 border border-indigo-100' : 'bg-slate-100 text-slate-500 border border-slate-200'
+                        }`}>
+                          {u.role === 'super_admin' ? 'Super Admin' : 'User'}
+                        </span>
+                        
+                        {u.uid !== userProfile?.uid && (
+                          <select
+                            value={u.role}
+                            onChange={(e) => handleUpdateRole(u.uid, e.target.value as any)}
+                            className="glass-input text-xs py-1.5 px-3 rounded-xl max-w-[140px] font-bold"
+                          >
+                            <option value="user">User</option>
+                            <option value="super_admin">Super Admin</option>
+                          </select>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -351,52 +510,54 @@ export default function SettingsPage() {
             </p>
           </div>
           
-          <div className="glass-card p-8 border-slate-100">
-            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">System & Maintenance</h4>
-            <div className="space-y-3">
-              <button 
-                onClick={handleHealthCheck}
-                className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-left hover:bg-slate-100 transition-all group"
-              >
-                <p className="text-xs font-black text-slate-900 group-hover:text-accent flex items-center justify-between">
-                  <span className="flex items-center gap-3"><Activity className="w-4 h-4 text-slate-400" /> Run Integrity Scan</span>
-                  <ChevronRight className="w-4 h-4" />
-                </p>
-              </button>
-              <button 
-                onClick={handleExportAudit}
-                className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-left hover:bg-slate-100 transition-all group"
-              >
-                <p className="text-xs font-black text-slate-900 group-hover:text-accent flex items-center justify-between">
-                  <span className="flex items-center gap-3"><History className="w-4 h-4 text-slate-400" /> Export Audit Logs</span>
-                  <ChevronRight className="w-4 h-4" />
-                </p>
-              </button>
-              <button 
-                onClick={handleDownloadBackup}
-                className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-left hover:bg-slate-100 transition-all group"
-              >
-                <p className="text-xs font-black text-slate-900 group-hover:text-accent flex items-center justify-between">
-                  <span className="flex items-center gap-3"><Download className="w-4 h-4 text-slate-400" /> Download Data Backup</span>
-                  <ChevronRight className="w-4 h-4" />
-                </p>
-              </button>
-              <button 
-                onClick={handleWipeData}
-                className="w-full p-4 bg-red-50/50 rounded-2xl border border-red-100 text-left hover:bg-red-50 transition-all group"
-              >
-                <p className="text-xs font-black text-red-600 flex items-center justify-between">
-                  <span className="flex items-center gap-3"><ShieldAlert className="w-4 h-4" /> Wipe System Memory</span>
-                  <ChevronRight className="w-4 h-4" />
-                </p>
-              </button>
+          {isSuperAdmin && (
+            <div className="glass-card p-8 border-slate-100">
+              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">System & Maintenance</h4>
+              <div className="space-y-3">
+                <button 
+                  onClick={handleHealthCheck}
+                  className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-left hover:bg-slate-100 transition-all group"
+                >
+                  <p className="text-xs font-black text-slate-900 group-hover:text-accent flex items-center justify-between">
+                    <span className="flex items-center gap-3"><Activity className="w-4 h-4 text-slate-400" /> Run Integrity Scan</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </p>
+                </button>
+                <button 
+                  onClick={handleExportAudit}
+                  className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-left hover:bg-slate-100 transition-all group"
+                >
+                  <p className="text-xs font-black text-slate-900 group-hover:text-accent flex items-center justify-between">
+                    <span className="flex items-center gap-3"><History className="w-4 h-4 text-slate-400" /> Export Audit Logs</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </p>
+                </button>
+                <button 
+                  onClick={handleDownloadBackup}
+                  className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-left hover:bg-slate-100 transition-all group"
+                >
+                  <p className="text-xs font-black text-slate-900 group-hover:text-accent flex items-center justify-between">
+                    <span className="flex items-center gap-3"><Download className="w-4 h-4 text-slate-400" /> Download Data Backup</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </p>
+                </button>
+                <button 
+                  onClick={handleWipeData}
+                  className="w-full p-4 bg-red-50/50 rounded-2xl border border-red-100 text-left hover:bg-red-50 transition-all group"
+                >
+                  <p className="text-xs font-black text-red-600 flex items-center justify-between">
+                    <span className="flex items-center gap-3"><ShieldAlert className="w-4 h-4" /> Wipe System Memory</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </p>
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
       {/* Company Modal */}
-      {isCompanyModalOpen && (
+      {isCompanyModalOpen && isSuperAdmin && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="glass-card w-full max-w-xl overflow-hidden shadow-2xl border-white animate-in zoom-in duration-200">
             <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
@@ -405,11 +566,11 @@ export default function SettingsPage() {
             </div>
             <form onSubmit={handleSaveCompany} className="p-8 space-y-6">
               <div>
-                <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-widest">Company Name</label>
+                <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Company Name</label>
                 <input required value={companyName} onChange={e => setCompanyName(e.target.value)} className="glass-input w-full" placeholder="Stark Industries" />
               </div>
               <div>
-                <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-widest">Tax / PAN Number</label>
+                <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Tax / PAN Number</label>
                 <input required value={taxId} onChange={e => setTaxId(e.target.value)} className="glass-input w-full" placeholder="TAX-001122" />
               </div>
               <div className="pt-6 flex justify-end gap-4">
@@ -421,7 +582,7 @@ export default function SettingsPage() {
       )}
 
       {/* Bank Modal */}
-      {isBankModalOpen && (
+      {isBankModalOpen && isSuperAdmin && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="glass-card w-full max-w-2xl overflow-hidden shadow-2xl border-white animate-in zoom-in duration-200">
             <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
@@ -441,24 +602,24 @@ export default function SettingsPage() {
               </div>
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-widest">Bank Name</label>
+                  <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Bank Name</label>
                   <input required value={bankName} onChange={e => setBankName(e.target.value)} className="glass-input w-full" />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-widest">Account Number</label>
+                  <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Account Number</label>
                   <input required value={accountNumber} onChange={e => setAccountNumber(e.target.value)} className="glass-input w-full font-mono" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-widest">Account Type</label>
+                  <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Account Type</label>
                   <select value={accountType} onChange={e => setAccountType(e.target.value as any)} className="glass-input w-full">
                     <option value="current">Current</option>
                     <option value="overdraft">Overdraft</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-widest">Branch Name</label>
+                  <label className="block text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">Branch Name</label>
                   <input value={branchName} onChange={e => setBranchName(e.target.value)} className="glass-input w-full" />
                 </div>
               </div>

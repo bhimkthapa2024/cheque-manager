@@ -4,7 +4,7 @@
  * with Firestore for real-time multi-device database syncing.
  */
 
-import { db } from "./firebase";
+import { db, auth } from "./firebase";
 import { collection, doc, setDoc, deleteDoc, onSnapshot } from "firebase/firestore";
 
 const isServer = typeof window === 'undefined';
@@ -102,10 +102,12 @@ export const storage = {
 
   log: (companyId: string, action: string, entityType: string, entityId: string, metadata: any = {}): void => {
     const logs = storage.get<any>("audit_logs");
+    const currentUser = auth.currentUser;
+    const userId = currentUser ? (currentUser.displayName || currentUser.email || "Unknown User") : "System";
     const newLog = {
       id: `log_${Date.now()}`,
       companyId,
-      userId: "Admin User",
+      userId,
       action,
       entityType,
       entityId,
@@ -117,11 +119,15 @@ export const storage = {
   }
 };
 
+let isSyncStarted = false;
 const collectionsToSync = ["companies", "banks", "chequeBooks", "cheques", "vendors", "audit_logs"];
 
 // Start Firestore real-time listener sync
 export const startFirestoreSync = () => {
   if (isServer) return;
+  if (!auth.currentUser) return;
+  if (isSyncStarted) return;
+  isSyncStarted = true;
 
   collectionsToSync.forEach(key => {
     const colRef = collection(db, getCollectionName(key));
