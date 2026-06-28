@@ -265,7 +265,7 @@ export default function VendorsPage() {
                     <td className="py-3 px-8 text-right">
                       <div className="flex justify-end gap-2">
                         <Link 
-                          href={`/vendors/${vendor.id}/analytics`}
+                          href={`/vendors/detail-analytics?id=${vendor.id}`}
                           className="p-2.5 text-slate-400 hover:text-accent hover:bg-accent/5 rounded-xl transition-all"
                           title="View Reports"
                         >

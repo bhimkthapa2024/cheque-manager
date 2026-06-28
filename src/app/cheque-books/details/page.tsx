@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useCompany } from "@/contexts/CompanyContext";
 import { ArrowLeft, Book, CreditCard, CheckCircle2, Clock, XCircle, AlertCircle, Search, Trash2, Plus } from "lucide-react";
 import type { ChequeBook, Cheque, ChequeStatus, Vendor } from "@/types";
@@ -19,8 +19,9 @@ const statusColors: Record<ChequeStatus, { bg: string, text: string, icon: React
 
 import { storage } from "@/lib/storage";
 
-export default function ChequeBookDetailsPage() {
-  const { id } = useParams();
+function ChequeBookDetailsContent() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const router = useRouter();
   const { activeCompany } = useCompany();
   const [book, setBook] = useState<ChequeBook | null>(null);
@@ -260,5 +261,13 @@ export default function ChequeBookDetailsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ChequeBookDetailsPage() {
+  return (
+    <Suspense fallback={<div className="flex h-full items-center justify-center p-20"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div></div>}>
+      <ChequeBookDetailsContent />
+    </Suspense>
   );
 }

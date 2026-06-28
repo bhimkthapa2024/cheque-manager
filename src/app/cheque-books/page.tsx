@@ -121,7 +121,7 @@ export default function ChequeBooksPage() {
             const progress = (used / total) * 100;
 
             return (
-              <Link key={book.id} href={`/cheque-books/${book.id}`} className="block group">
+              <Link key={book.id} href={`/cheque-books/details?id=${book.id}`} className="block group">
                 <div className="glass-card p-8 group-hover:shadow-lg group-hover:-translate-y-1 transition-all">
                   <div className="flex justify-between items-start mb-6">
                     <div className="bg-accent/5 p-4 rounded-2xl text-accent border border-accent/10 group-hover:bg-accent/10 transition-all group-hover:scale-105">

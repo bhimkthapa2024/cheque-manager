@@ -218,7 +218,7 @@ export default function VendorAnalysisHub() {
                   </td>
                   <td className="py-4 px-8 text-right">
                     <Link 
-                      href={`/vendors/${v.id}/analytics`}
+                      href={`/vendors/detail-analytics?id=${v.id}`}
                       className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-accent transition-all group-hover:scale-105"
                     >
                       Deep Dive <ArrowUpRight className="w-3 h-3" />

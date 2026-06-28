@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect, useMemo, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useCompany } from "@/contexts/CompanyContext";
 import { storage } from "@/lib/storage";
 import type { Cheque, Vendor, Bank } from "@/types";
@@ -21,8 +21,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export default function VendorAnalyticsPage() {
-  const params = useParams();
+function VendorAnalyticsContent() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const router = useRouter();
   const { activeCompany } = useCompany();
   const [vendor, setVendor] = useState<Vendor | null>(null);
@@ -31,11 +32,11 @@ export default function VendorAnalyticsPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!activeCompany || !params.id) return;
+    if (!activeCompany || !id) return;
 
     setIsLoading(true);
     const allVendors = storage.get<Vendor>("vendors");
-    const foundVendor = allVendors.find(v => v.id === params.id && v.companyId === activeCompany.id);
+    const foundVendor = allVendors.find(v => v.id === id && v.companyId === activeCompany.id);
     
     if (!foundVendor) {
       router.push('/vendors');
@@ -45,7 +46,7 @@ export default function VendorAnalyticsPage() {
     setVendor(foundVendor);
 
     const allCheques = storage.get<Cheque>("cheques")
-      .filter(c => c.vendorId === params.id && c.companyId === activeCompany.id)
+      .filter(c => c.vendorId === id && c.companyId === activeCompany.id)
       .map(c => ({
         ...c,
         chequeDate: new Date(c.chequeDate),
@@ -59,7 +60,7 @@ export default function VendorAnalyticsPage() {
     setBanks(allBanks);
 
     setIsLoading(false);
-  }, [activeCompany, params.id, router]);
+  }, [activeCompany, id, router]);
 
   const metrics = useMemo(() => {
     if (cheques.length === 0) return null;
@@ -83,8 +84,8 @@ export default function VendorAnalyticsPage() {
       const monthYear = d.getFullYear();
       
       const amount = cleared
-        .filter(c => c.issueDate.getMonth() === monthIdx && c.issueDate.getFullYear() === monthYear)
-        .reduce((sum, c) => sum + c.amount, 0);
+          .filter(c => c.issueDate.getMonth() === monthIdx && c.issueDate.getFullYear() === monthYear)
+          .reduce((sum, c) => sum + c.amount, 0);
         
       return { label: months[monthIdx], amount };
     });
@@ -105,7 +106,7 @@ export default function VendorAnalyticsPage() {
 
   if (isLoading || !vendor) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex h-full items-center justify-center p-20">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
       </div>
     );
@@ -326,5 +327,13 @@ export default function VendorAnalyticsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VendorAnalyticsPage() {
+  return (
+    <Suspense fallback={<div className="flex h-full items-center justify-center p-20"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div></div>}>
+      <VendorAnalyticsContent />
+    </Suspense>
   );
 }
