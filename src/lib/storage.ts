@@ -123,48 +123,53 @@ let isSyncStarted = false;
 const collectionsToSync = ["companies", "banks", "chequeBooks", "cheques", "vendors", "audit_logs"];
 
 // Start Firestore real-time listener sync
+import { onAuthStateChanged } from "firebase/auth";
+
 export const startFirestoreSync = () => {
   if (isServer) return;
-  if (!auth.currentUser) return;
   if (isSyncStarted) return;
   isSyncStarted = true;
 
-  collectionsToSync.forEach(key => {
-    const colRef = collection(db, getCollectionName(key));
-    
-    onSnapshot(colRef, (snapshot) => {
-      const firestoreItems: any[] = [];
-      snapshot.forEach(doc => {
-        firestoreItems.push({ ...doc.data(), id: doc.id });
-      });
+  onAuthStateChanged(auth, (user) => {
+    if (!user) return; // Wait until authenticated
 
-      // Get current local items to see if we have unsynced data
-      const currentStored = localStorage.getItem(`chq_${key}`);
-      const localItems: any[] = currentStored ? JSON.parse(currentStored) : [];
+    collectionsToSync.forEach(key => {
+      const colRef = collection(db, getCollectionName(key));
       
-      const firestoreIds = new Set(firestoreItems.map(item => item.id));
-      let hasUnsyncedLocalData = false;
+      onSnapshot(colRef, (snapshot) => {
+        const firestoreItems: any[] = [];
+        snapshot.forEach(doc => {
+          firestoreItems.push({ ...doc.data(), id: doc.id });
+        });
 
-      // Upload any local items that are missing from Firestore
-      localItems.forEach(localItem => {
-        if (!firestoreIds.has(localItem.id)) {
-          const cleaned = cleanForFirestore(localItem);
-          setDoc(doc(db, getCollectionName(key), localItem.id), cleaned, { merge: true }).catch(err => 
-            console.error(`Firestore auto-sync write error for ${key}/${localItem.id}:`, err)
-          );
-          firestoreItems.push(localItem); // Optimistically add to list so UI doesn't jump
-          hasUnsyncedLocalData = true;
+        // Get current local items to see if we have unsynced data
+        const currentStored = localStorage.getItem(`chq_${key}`);
+        const localItems: any[] = currentStored ? JSON.parse(currentStored) : [];
+        
+        const firestoreIds = new Set(firestoreItems.map(item => item.id));
+        let hasUnsyncedLocalData = false;
+
+        // Upload any local items that are missing from Firestore
+        localItems.forEach(localItem => {
+          if (!firestoreIds.has(localItem.id)) {
+            const cleaned = cleanForFirestore(localItem);
+            setDoc(doc(db, getCollectionName(key), localItem.id), cleaned, { merge: true }).catch(err => 
+              console.error(`Firestore auto-sync write error for ${key}/${localItem.id}:`, err)
+            );
+            firestoreItems.push(localItem); // Optimistically add to list so UI doesn't jump
+            hasUnsyncedLocalData = true;
+          }
+        });
+
+        const newSerialized = JSON.stringify(firestoreItems);
+        
+        if (currentStored !== newSerialized || hasUnsyncedLocalData) {
+          localStorage.setItem(`chq_${key}`, newSerialized);
+          window.dispatchEvent(new CustomEvent("storage_sync", { detail: { key } }));
         }
+      }, (error) => {
+        console.error(`Firestore real-time sync subscription error for collection '${key}':`, error);
       });
-
-      const newSerialized = JSON.stringify(firestoreItems);
-      
-      if (currentStored !== newSerialized || hasUnsyncedLocalData) {
-        localStorage.setItem(`chq_${key}`, newSerialized);
-        window.dispatchEvent(new CustomEvent("storage_sync", { detail: { key } }));
-      }
-    }, (error) => {
-      console.error(`Firestore real-time sync subscription error for collection '${key}':`, error);
     });
   });
 };

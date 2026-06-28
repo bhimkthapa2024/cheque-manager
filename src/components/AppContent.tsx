@@ -10,6 +10,7 @@ import { Loader2, CreditCard } from "lucide-react";
 
 export function AppContent({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   if (loading) {
     return (
@@ -33,7 +34,6 @@ export function AppContent({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   if (!user) {
     return <AuthScreen />;
