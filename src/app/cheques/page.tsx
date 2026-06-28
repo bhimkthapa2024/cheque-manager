@@ -300,10 +300,10 @@ function ChequesPageContent() {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Cheque Lifecycle</h1>
-          <p className="text-slate-500 mt-2">Track and manage issued cheques for {activeCompany.name}</p>
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Cheque Lifecycle</h1>
+          <p className="text-slate-500 mt-2 text-sm md:text-base">Track and manage issued cheques for {activeCompany.name}</p>
         </div>
         <button
           onClick={() => setIsAddModalOpen(true)}
@@ -315,8 +315,8 @@ function ChequesPageContent() {
       </div>
 
       <div className="glass-card overflow-hidden flex flex-col shadow-sm">
-        <div className="p-6 border-b border-slate-100 flex items-center gap-6 bg-slate-50/50">
-          <div className="relative flex-1 max-w-md">
+        <div className="p-4 md:p-6 border-b border-slate-100 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 bg-slate-50/50">
+          <div className="relative w-full md:flex-1 md:max-w-md">
             <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input 
               type="text" 
@@ -327,7 +327,7 @@ function ChequesPageContent() {
             />
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full md:w-auto">
             <Filter className="w-4 h-4 text-slate-400" />
             <select
               value={statusFilter}
@@ -507,7 +507,7 @@ function ChequesPageContent() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
                     <div>
                       <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">Debit from Bank</label>
                       <div className="relative">
@@ -577,7 +577,7 @@ function ChequesPageContent() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-8 pt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 pt-4">
                     <div className="col-span-1">
                       <label className="block text-[10px] font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">Settlement Amount (NPR)</label>
                       <input

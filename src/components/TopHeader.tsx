@@ -39,7 +39,7 @@ export function TopHeader({ onMenuClick }: TopHeaderProps) {
       <div className="flex items-center gap-4 md:gap-8">
         <button 
           onClick={onMenuClick}
-          className="p-2 -ml-2 text-slate-500 hover:text-slate-900 md:hidden transition-colors rounded-lg hover:bg-slate-100"
+          className="p-2 -ml-2 text-slate-500 hover:text-slate-900 md:hidden transition-colors rounded-lg hover:bg-slate-100 shrink-0"
         >
           <Menu className="w-6 h-6" />
         </button>
@@ -52,8 +52,8 @@ export function TopHeader({ onMenuClick }: TopHeaderProps) {
             <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center text-white text-xs font-black shadow-lg shadow-accent/20">
               {activeCompany.name.charAt(0)}
             </div>
-            <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-              {activeCompany.name}
+            <h2 className="text-lg md:text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+              <span className="truncate max-w-[120px] md:max-w-[300px]">{activeCompany.name}</span>
               <span className="text-slate-300 font-normal px-1 md:px-2">/</span>
               <span className="text-slate-400 font-bold text-sm tracking-normal hidden md:inline">{getPageTitle()}</span>
             </h2>
