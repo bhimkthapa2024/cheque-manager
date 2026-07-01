@@ -61,25 +61,21 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
-@keyframes blob-morph {
+@keyframes orb-float {
   0% {
-    border-radius: 42% 56% 72% 28% / 42% 42% 56% 48%;
-    transform: translate(0vw, 0vh) scale(1);
+    transform: translate(0vw, 0vh) scale(1) rotate(0deg);
   }
   33% {
-    border-radius: 72% 28% 48% 48% / 28% 28% 72% 72%;
-    transform: translate(8vw, -8vh) scale(1.15);
+    transform: translate(15vw, -15vh) scale(1.2) rotate(120deg);
   }
   66% {
-    border-radius: 100% 56% 56% 100% / 100% 100% 56% 56%;
-    transform: translate(-8vw, 8vh) scale(0.85);
+    transform: translate(-15vw, 15vh) scale(0.8) rotate(240deg);
   }
   100% {
-    border-radius: 42% 56% 72% 28% / 42% 42% 56% 48%;
-    transform: translate(0vw, 0vh) scale(1);
+    transform: translate(0vw, 0vh) scale(1) rotate(360deg);
   }
 }
 
-.blob-morph {
-  animation: blob-morph 15s ease-in-out infinite alternate;
+.animate-orb-float {
+  animation: orb-float 20s ease-in-out infinite alternate;
 }
