@@ -69,9 +69,13 @@ export function AuthScreen() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 relative overflow-hidden p-6">
-      {/* Background Decorative Blobs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-accent/20 blur-[100px] pointer-events-none blob-morph" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-500/20 blur-[100px] pointer-events-none blob-morph" style={{ animationDelay: '-6s', animationDuration: '15s' }} />
+      {/* Aesthetic Morphing Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] bg-accent/25 rounded-full blur-[120px] opacity-70 blob-morph" />
+        <div className="absolute top-[20%] -right-[20%] w-[60vw] h-[60vw] bg-indigo-600/25 rounded-full blur-[120px] opacity-70 blob-morph" style={{ animationDelay: '-5s', animationDuration: '18s' }} />
+        <div className="absolute -bottom-[20%] left-[20%] w-[80vw] h-[80vw] bg-purple-600/20 rounded-full blur-[120px] opacity-70 blob-morph" style={{ animationDelay: '-10s', animationDuration: '20s' }} />
+        <div className="absolute top-[40%] left-[40%] w-[50vw] h-[50vw] bg-cyan-500/15 rounded-full blur-[120px] opacity-70 blob-morph" style={{ animationDelay: '-2s', animationDuration: '16s' }} />
+      </div>
 
       {/* Grid Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />

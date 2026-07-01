@@ -62,20 +62,24 @@ body {
 }
 
 @keyframes blob-morph {
-  0%, 100% {
+  0% {
     border-radius: 42% 56% 72% 28% / 42% 42% 56% 48%;
     transform: translate(0vw, 0vh) scale(1);
   }
   33% {
     border-radius: 72% 28% 48% 48% / 28% 28% 72% 72%;
-    transform: translate(2vw, -2vh) scale(1.1);
+    transform: translate(8vw, -8vh) scale(1.15);
   }
   66% {
     border-radius: 100% 56% 56% 100% / 100% 100% 56% 56%;
-    transform: translate(-2vw, 3vh) scale(0.9);
+    transform: translate(-8vw, 8vh) scale(0.85);
+  }
+  100% {
+    border-radius: 42% 56% 72% 28% / 42% 42% 56% 48%;
+    transform: translate(0vw, 0vh) scale(1);
   }
 }
 
 .blob-morph {
-  animation: blob-morph 12s ease-in-out infinite alternate;
+  animation: blob-morph 15s ease-in-out infinite alternate;
 }
