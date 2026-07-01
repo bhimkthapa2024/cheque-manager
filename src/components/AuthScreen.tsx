@@ -82,11 +82,11 @@ export function AuthScreen() {
         </div>
 
         {/* Logo Header */}
-        <div className="flex items-center gap-3 mb-8 italic">
-          <div className="bg-accent p-3.5 rounded-2xl shadow-xl shadow-accent/30 animate-pulse">
-            <CreditCard className="w-8 h-8 text-white not-italic" />
+        <div className="flex items-center gap-2 md:gap-3 mb-6 md:mb-8 italic">
+          <div className="bg-accent p-2.5 md:p-3.5 rounded-2xl shadow-xl shadow-accent/30 animate-pulse">
+            <CreditCard className="w-6 h-6 md:w-8 md:h-8 text-white not-italic" />
           </div>
-          <span className="text-3xl font-black text-white tracking-tighter">
+          <span className="text-2xl md:text-3xl font-black text-white tracking-tighter">
             CHEQUE<span className="text-accent not-italic">PRO</span>
           </span>
         </div>
@@ -100,7 +100,7 @@ export function AuthScreen() {
               <button
                 type="button"
                 onClick={() => { setActiveTab("signin"); setErrorMsg(""); }}
-                className={`flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                className={`flex-1 py-2 md:py-2.5 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-wider transition-all ${
                   activeTab === "signin" 
                     ? "bg-white text-slate-950 shadow-lg" 
                     : "text-slate-400 hover:text-white"
@@ -111,7 +111,7 @@ export function AuthScreen() {
               <button
                 type="button"
                 onClick={() => { setActiveTab("signup"); setErrorMsg(""); }}
-                className={`flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                className={`flex-1 py-2 md:py-2.5 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-wider transition-all ${
                   activeTab === "signup" 
                     ? "bg-white text-slate-950 shadow-lg" 
                     : "text-slate-400 hover:text-white"
@@ -141,7 +141,7 @@ export function AuthScreen() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {activeTab === "signup" && (
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 pl-1">Full Name</label>
+                <label className="block text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 pl-1">Full Name</label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
@@ -150,14 +150,14 @@ export function AuthScreen() {
                     placeholder="Tony Stark"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent focus:bg-white/10 transition-all font-medium"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 md:py-3.5 pl-10 md:pl-12 pr-4 text-xs md:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent focus:bg-white/10 transition-all font-medium"
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 pl-1">Email Address</label>
+              <label className="block text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 pl-1">Email Address</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
@@ -174,12 +174,12 @@ export function AuthScreen() {
             {activeTab !== "forgot" && (
               <div>
                 <div className="flex justify-between items-center mb-2 pl-1">
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Password</label>
+                  <label className="block text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">Password</label>
                   {activeTab === "signin" && (
                     <button
                       type="button"
                       onClick={() => { setActiveTab("forgot"); setErrorMsg(""); }}
-                      className="text-[10px] font-black uppercase text-accent tracking-wider hover:underline"
+                      className="text-[9px] md:text-[10px] font-black uppercase text-accent tracking-wider hover:underline"
                     >
                       Forgot?
                     </button>
@@ -193,7 +193,7 @@ export function AuthScreen() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent focus:bg-white/10 transition-all font-medium"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 md:py-3.5 pl-10 md:pl-12 pr-4 text-xs md:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent focus:bg-white/10 transition-all font-medium"
                   />
                 </div>
               </div>
@@ -201,7 +201,7 @@ export function AuthScreen() {
 
             {activeTab === "signup" && (
               <div>
-                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 pl-1">Confirm Password</label>
+                <label className="block text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 pl-1">Confirm Password</label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
@@ -210,7 +210,7 @@ export function AuthScreen() {
                     placeholder="••••••••"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent focus:bg-white/10 transition-all font-medium"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 md:py-3.5 pl-10 md:pl-12 pr-4 text-xs md:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-accent focus:bg-white/10 transition-all font-medium"
                   />
                 </div>
               </div>
@@ -219,7 +219,7 @@ export function AuthScreen() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-accent hover:bg-accent-hover text-white py-3.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg shadow-accent/25 hover:shadow-accent/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:pointer-events-none mt-6"
+              className="w-full bg-accent hover:bg-accent-hover text-white py-3 md:py-3.5 rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-wider shadow-lg shadow-accent/25 hover:shadow-accent/40 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:pointer-events-none mt-6"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -239,7 +239,7 @@ export function AuthScreen() {
               <button
                 type="button"
                 onClick={() => { setActiveTab("signin"); setErrorMsg(""); }}
-                className="text-[10px] font-black uppercase text-slate-400 hover:text-white tracking-widest"
+                className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 hover:text-white tracking-widest"
               >
                 Back to Sign In
               </button>
@@ -248,7 +248,7 @@ export function AuthScreen() {
         </div>
 
         {/* Footer */}
-        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-8">
+        <p className="text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-8">
           Secured by Firebase Authentication
         </p>
       </div>
