@@ -18,6 +18,16 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  font-size: 13px; /* Scales down text, padding, margins for mobile */
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px; /* Regular size on tablets/desktop */
+  }
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
