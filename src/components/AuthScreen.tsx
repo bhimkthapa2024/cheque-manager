@@ -69,17 +69,18 @@ export function AuthScreen() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 relative overflow-hidden p-6">
-      {/* Aesthetic Morphing Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[60vw] h-[60vw] bg-gradient-to-br from-accent/40 to-purple-600/10 rounded-full blur-[120px] opacity-70 animate-orb-float" style={{ animationDuration: '24s' }} />
-        <div className="absolute top-[20%] -right-[20%] w-[50vw] h-[50vw] bg-gradient-to-bl from-indigo-600/40 to-cyan-500/10 rounded-full blur-[120px] opacity-70 animate-orb-float" style={{ animationDelay: '-5s', animationDuration: '28s', animationDirection: 'reverse' }} />
-        <div className="absolute -bottom-[20%] left-[20%] w-[70vw] h-[70vw] bg-gradient-to-tr from-purple-600/40 to-accent/10 rounded-full blur-[120px] opacity-70 animate-orb-float" style={{ animationDelay: '-10s', animationDuration: '30s' }} />
-      </div>
-
-      {/* Grid Pattern */}
+      
+      {/* Grid Pattern Background */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
-      <div className="w-full max-w-md relative z-10 flex flex-col items-center">
+      <div className="w-full max-w-md relative z-10 flex flex-col items-center mt-10">
+        
+        {/* Floating Gradient Circles strictly behind the card */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none -z-10">
+          <div className="absolute -top-10 -left-10 w-72 h-72 bg-gradient-to-br from-accent/60 to-purple-600/60 rounded-full blur-[80px] opacity-80 animate-orb-float" style={{ animationDuration: '15s' }} />
+          <div className="absolute -bottom-10 -right-10 w-72 h-72 bg-gradient-to-bl from-indigo-600/60 to-cyan-500/60 rounded-full blur-[80px] opacity-80 animate-orb-float" style={{ animationDelay: '-7s', animationDuration: '18s', animationDirection: 'reverse' }} />
+        </div>
+
         {/* Logo Header */}
         <div className="flex items-center gap-3 mb-8 italic">
           <div className="bg-accent p-3.5 rounded-2xl shadow-xl shadow-accent/30 animate-pulse">
